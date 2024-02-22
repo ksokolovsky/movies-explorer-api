@@ -24,17 +24,19 @@ exports.getCurrentUser = async (req, res, next) => {
 };
 
 exports.createUser = (req, res, next) => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
 
   bcrypt.hash(password, 10)
     .then((hashedPassword) => {
       User.create({
+        name,
         email,
         password: hashedPassword,
       })
         .then((user) => {
           res.status(201).send({
             _id: user._id,
+            name: user.name,
             email: user.email,
           });
         })
@@ -53,24 +55,27 @@ exports.createUser = (req, res, next) => {
 
 // Обновление информации пользователя
 exports.updateProfile = async (req, res, next) => {
-  const { email, name } = req.body;
+  const { name, email } = req.body;
   const userId = req.user._id;
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { email, name },
+      { name, email },
       { new: true, runValidators: true, context: 'query' },
     );
 
     if (!updatedUser) {
-      throw new NotFoundError('Пользователь не найден');
+      next(new NotFoundError('Пользователь не найден'));
+      return;
     }
 
-    res.send({ email: updatedUser.email, name: updatedUser.name });
+    res.send({ data: { name: updatedUser.name, email: updatedUser.email } });
   } catch (error) {
     if (error.name === 'ValidationError') {
       next(new BadRequestError('Переданы некорректные данные для обновления профиля'));
+    } else if (error.code === 11000) {
+      next(new ConflictError('Пользователь с таким email уже существует'));
     } else {
       next(error);
     }

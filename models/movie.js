@@ -24,14 +24,32 @@ const movieSchema = new mongoose.Schema({
   image: {
     type: String,
     required: true,
+    validate: {
+      validator(v) {
+        return /^(https?:\/\/)(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+~#?&//=]*)/.test(v);
+      },
+      message: (props) => `${props.value} не является допустимым URL-адресом!`,
+    },
   },
   trailerLink: {
     type: String,
     required: true,
+    validate: {
+      validator(v) {
+        return /^(https?:\/\/)(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+~#?&//=]*)/.test(v);
+      },
+      message: (props) => `${props.value} не является допустимым URL-адресом!`,
+    },
   },
   thumbnail: {
     type: String,
     required: true,
+    validate: {
+      validator(v) {
+        return /^(https?:\/\/)(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+~#?&//=]*)/.test(v);
+      },
+      message: (props) => `${props.value} не является допустимым URL-адресом!`,
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

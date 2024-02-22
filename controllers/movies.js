@@ -7,7 +7,8 @@ const ForbiddenError = require('../errors/forbidden');
 // Получаем все карточки
 exports.getMovies = async (req, res, next) => {
   try {
-    const movies = await Movie.find({});
+    const userId = req.user._id;
+    const movies = await Movie.find({ owner: userId });
     res.send({ data: movies });
   } catch (error) {
     next(error);

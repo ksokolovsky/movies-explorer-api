@@ -26,7 +26,7 @@ const registrationSchema = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
-    // name: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(30),
   }),
 });
 
@@ -39,7 +39,7 @@ const loginSchema = celebrate({
 
 const updateProfileSchema = celebrate({
   body: Joi.object().keys({
-    // name: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(30),
     email: Joi.string().required().email(),
   }),
 });
